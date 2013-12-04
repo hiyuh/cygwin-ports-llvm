@@ -1,11 +1,25 @@
---- origsrc/llvm-3.1.src/tools/llvm-config/llvm-config.cpp	2012-05-15 17:06:08.000000000 -0500
-+++ src/llvm-3.1.src/tools/llvm-config/llvm-config.cpp	2012-07-04 16:49:45.965537100 -0500
-@@ -279,7 +279,7 @@ int main(int argc, char **argv) {
-         OS << "-L" << ActiveLibDir << ' ' << LLVM_LDFLAGS
-            << ' ' << LLVM_SYSTEM_LIBS << '\n';
-       } else if (Arg == "--libs") {
--        PrintLibs = true;
+--- origsrc/llvm-3.1.src/tools/llvm-config/llvm-config.cpp	2013-12-05 09:41:03.214992500 +0900
++++ src/llvm-3.1.src/tools/llvm-config/llvm-config.cpp	2013-12-05 10:12:08.462285800 +0900
+@@ -335,6 +335,10 @@
+       } else if (PrintLibFiles) {
+         OS << ActiveLibDir << '/' << Lib;
+       } else if (PrintLibs) {
++        // FIXME: Do not print modular libs until llvm-config is really fixed.
 +        OS << "-lLLVM-" << PACKAGE_VERSION << '\n';
-       } else if (Arg == "--libnames") {
-         PrintLibNames = true;
-       } else if (Arg == "--libfiles") {
++        break;
++
+         // If this is a typical library name, include it using -l.
+         if (Lib.startswith("lib") && Lib.endswith(".a")) {
+           OS << "-l" << Lib.slice(3, Lib.size()-2);
+@@ -347,8 +351,9 @@
+     }
+     OS << '\n';
+   } else if (!Components.empty()) {
+-    errs() << "llvm-config: error: components given, but unused\n\n";
+-    usage();
++    // FIXME: Do nothing until llvm-config is really fixed.
++    // errs() << "llvm-config: error: components given, but unused\n\n";
++    // usage();
+   }
+ 
+   return 0;
